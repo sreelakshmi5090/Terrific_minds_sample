@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="product.css">
+ 
+    
+</head>
+<body>
+  <header>
+    <div class="logo">shop</div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Explore</a>
+    </nav>
+    <div class="search-bar">
+      <input type="text" placeholder="Search for products...">
+    </div>
+    <div class="icons">
+      <i class="fa-regular fa-heart"></i>
+      <div class="cart-icon">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-count">0</span>
+      </div>
+      <i class="fa-regular fa-user"></i>
+    </div>
+  </header>
+
+  <!-- PRODUCT CONTAINER -->
+  <div class="container">
+    <div class="gallery">
+      <div class="main-img-container">
+        <img src="img1.png" alt="Main Product" class="main-img">
+      </div>
+      <div class="thumbs">
+        <img src="img1.png" alt="">
+        <img src="img2.png" alt="">
+        <img src="img3.png" alt="">
+        <img src="img4.png" alt="">
+        <img src="img5.png" alt="">
+      </div>
+    </div>
+
+    <!-- Right: Details -->
+    <div class="details">
+      <p class="brand">Comfrt</p>
+      <h2>Travel Essentials Hoodie <i class="fa-regular fa-heart"></i></h2>
+      <p class="rating">⭐⭐⭐⭐ (3.8K ratings)</p>
+      <p class="price">$<span id="price">69.00</span> <del>$130.00</del></p>
+
+      <p><b>Color:</b> Steel Grey</p>
+      <div class="colors">
+        <div class="color active" style="background: #555;"></div>
+        <div class="color" style="background: #ccc;"></div>
+        <div class="color" style="background: #f3dce1;"></div>
+        <div class="color" style="background: #d4c7b0;"></div>
+      </div>
+
+      <p><b>Size:</b></p>
+      <div class="sizes">
+        <div class="size active">XS</div>
+        <div class="size">S</div>
+        <div class="size">M</div>
+        <div class="size">L</div>
+        <div class="size">XL</div>
+      </div>
+
+      <div class="quantity">
+        <button id="decrease">-</button>
+        <span id="quantity">1</span>
+        <button id="increase">+</button>
+      </div>
+
+      <div class="total-price">
+        Total: $<span id="total">69.00</span>
+      </div>
+
+      <div class="buttons">
+        <button class="add-cart" id="addCart">Add to Cart</button>
+        <button class="buy-now">Buy Now</button>
+      </div>
+
+      <div class="description">
+        <h3>Description</h3>
+        <p>High-quality hoodie made with soft, breathable fabric. Perfect for travel and daily comfort.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="close" id="closeLightbox">&times;</span>
+    <img src="img1.png" alt="Zoomed Product">
+  </div>
+
+<script>
+  // ---- CART COUNT ----
+  let cartCountEl = document.querySelector(".cart-count");
+  let addCartBtn = document.getElementById("addCart");
+  let quantityEl = document.getElementById("quantity");
+  let totalEl = document.getElementById("total");
+  let priceEl = document.getElementById("price");
+  let price = parseFloat(priceEl.innerText);
+
+  // Load cart count from localStorage
+  let cartCount = localStorage.getItem("cartCount") ? parseInt(localStorage.getItem("cartCount")) : 0;
+  cartCountEl.textContent = cartCount;
+
+  // Quantity controls
+  let quantity = 1;
+  document.getElementById("increase").addEventListener("click", () => {
+    quantity++;
+    quantityEl.innerText = quantity;
+    updateTotal();
+  });
+  document.getElementById("decrease").addEventListener("click", () => {
+    if (quantity > 1) {
+      quantity--;
+      quantityEl.innerText = quantity;
+      updateTotal();
+    }
+  });
+
+  function updateTotal() {
+    totalEl.innerText = (price * quantity).toFixed(2);
+  }
+
+  // Add to Cart
+  addCartBtn.addEventListener("click", () => {
+    cartCount += quantity;
+    cartCountEl.textContent = cartCount;
+    localStorage.setItem("cartCount", cartCount);
+    alert(quantity + " item(s) added to cart!");
+  });
+
+  // ---- LIGHTBOX ----
+  const lightbox = document.getElementById("lightbox");
+  const mainImg = document.querySelector(".main-img");
+  const lightboxImg = lightbox.querySelector("img");
+  const closeLightbox = document.getElementById("closeLightbox");
+
+  mainImg.addEventListener("click", () => {
+    lightbox.style.display = "flex";
+    lightboxImg.src = mainImg.src;
+  });
+  closeLightbox.addEventListener("click", () => {
+    lightbox.style.display = "none";
+  });
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) {
+      lightbox.style.display = "none";
+    }
+  });
+</script>
+</body>
+</html>

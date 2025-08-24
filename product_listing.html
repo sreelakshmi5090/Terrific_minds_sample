@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Listing Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+
+    body { background: #f8f8f8; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 15px 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo { font-size: 20px; font-weight: bold; color: #5a2ec0; }
+    .search-bar input {
+      padding: 8px 12px;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+    }
+    .cart {
+      position: relative;
+      font-size: 22px;
+      cursor: pointer;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px; right: -8px;
+      background: red;
+      color: #fff;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 20px;
+    }
+    select {
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .product {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .product img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .product h3 {
+      font-size: 16px;
+      margin: 10px 0;
+      min-height: 40px;
+    }
+    .price { font-size: 16px; font-weight: bold; color: #222; }
+    .product button {
+      margin-top: 8px;
+      padding: 8px 12px;
+      border: none;
+      background: #5a2ec0;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .product button:hover { background: #431f99; }
+
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #5a2ec0;
+      color: #fff;
+      text-align: center;
+      padding: 12px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    @media(max-width:768px) {
+      .search-bar input { width: 180px; }
+      .filters { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Shop</div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search products...">
+    </div>
+    <div class="cart">
+      <i class="fas fa-shopping-cart"></i>
+      <span class="cart-count" id="cartCount">0</span>
+    </div>
+  </header>
+
+  <div class="filters">
+    <div>
+      <label for="sort">Sort By: </label>
+      <select id="sort">
+        <option value="nameAsc">Name (A-Z)</option>
+        <option value="nameDesc">Name (Z-A)</option>
+        <option value="lowHigh">Price (Low to High)</option>
+        <option value="highLow">Price (High to Low)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="product-list" id="productList"></div>
+
+  <div class="bottom-bar">
+    Total: $<span id="totalPrice">0.00</span>
+  </div>
+
+  <script>
+    const products = [
+      {id:1, name:"Hailey Biker Shorts", price:600, img:"p1.png"},
+      {id:2, name:"Natalee Biker Shorts", price:800, img:"p2.png"},
+      {id:3, name:"Oversized Black Tee", price:1000, img:"p3.png"},
+      {id:4, name:"Everyday Leggings", price:950, img:"p4.png"},
+      {id:5, name:"Light Blue Jeans", price:300, img:"p5.png"},
+      {id:6, name:"Oversized White Tee", price:400, img:"p6.png"},
+      {id:7, name:"Casual Hoodie", price:250, img:"p7.png"},
+      {id:8, name:"Slim Fit Jeans", price:220, img:"p8.png"},
+      {id:9, name:"Running Shoes", price:350, img:"p9.png"},
+      {id:10, name:"White Sneakers", price:400, img:"p10.png"},
+      {id:11, name:"Leather Jacket", price:500, img:"p11.png"},
+      {id:12, name:"Crop Top", price:150, img:"p12.png"},
+      {id:13, name:"Formal Shirt", price:200, img:"p3.png"},
+      {id:14, name:"Denim Jacket", price:300, img:"p4.png"},
+      {id:15, name:"Black Dress", price:450, img:"p5.png"},
+      {id:16, name:"Sports Cap", price:120, img:"p6.png"},
+      {id:17, name:"Backpack", price:280, img:"p7.png"},
+      {id:18, name:"Sunglasses", price:180, img:"p8.png"},
+      {id:19, name:"Watch", price:600, img:"p9.png"},
+      {id:20, name:"Sandals", price:140, img:"p11.png"},
+      {id:21, name:"Backpack", price:300, img:"p2.png"},
+      {id:22, name:"Sunglasses", price:600, img:"p1.png"},
+      {id:23, name:"Watch", price:650, img:"p12.png"},
+      {id:24, name:"Sandals", price:150, img:"p9.png"},
+    ];
+
+    let cartCount = 0;
+    let totalPrice = 0;
+
+    const productList = document.getElementById("productList");
+    const cartCountEl = document.getElementById("cartCount");
+    const totalPriceEl = document.getElementById("totalPrice");
+    const searchInput = document.getElementById("searchInput");
+    const sortSelect = document.getElementById("sort");
+
+    function renderProducts(list) {
+      productList.innerHTML = "";
+      list.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "product";
+        div.innerHTML = `
+          <img src="${p.img}" alt="${p.name}">
+          <h3>${p.name}</h3>
+          <p class="price">$${p.price.toFixed(2)}</p>
+          <button onclick="addToCart(${p.id})">Add to Cart</button>
+        `;
+        productList.appendChild(div);
+      });
+    }
+
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      cartCount++;
+      totalPrice += product.price;
+      cartCountEl.textContent = cartCount;
+      totalPriceEl.textContent = totalPrice.toFixed(2);
+    }
+
+    function searchProducts() {
+      const term = searchInput.value.toLowerCase();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(term));
+      renderProducts(filtered);
+    }
+
+    function sortProducts() {
+      let sorted = [...products];
+      const value = sortSelect.value;
+      if(value === "nameAsc") sorted.sort((a,b)=>a.name.localeCompare(b.name));
+      if(value === "nameDesc") sorted.sort((a,b)=>b.name.localeCompare(a.name));
+      if(value === "lowHigh") sorted.sort((a,b)=>a.price - b.price);
+      if(value === "highLow") sorted.sort((a,b)=>b.price - a.price);
+      renderProducts(sorted);
+    }
+
+    searchInput.addEventListener("input", searchProducts);
+    sortSelect.addEventListener("change", sortProducts);
+
+
+    renderProducts(products);
+  </script>
+</body>
+</html>
