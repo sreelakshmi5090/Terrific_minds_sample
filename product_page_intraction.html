@@ -90,7 +90,6 @@
     </div>
   </div>
 
-  <!-- Lightbox -->
   <div class="lightbox" id="lightbox">
     <span class="close" id="closeLightbox">&times;</span>
     <img src="img1.png" alt="Zoomed Product">
@@ -105,11 +104,9 @@
   let priceEl = document.getElementById("price");
   let price = parseFloat(priceEl.innerText);
 
-  // Load cart count from localStorage
   let cartCount = localStorage.getItem("cartCount") ? parseInt(localStorage.getItem("cartCount")) : 0;
   cartCountEl.textContent = cartCount;
 
-  // Quantity controls
   let quantity = 1;
   document.getElementById("increase").addEventListener("click", () => {
     quantity++;
@@ -128,7 +125,6 @@
     totalEl.innerText = (price * quantity).toFixed(2);
   }
 
-  // Add to Cart
   addCartBtn.addEventListener("click", () => {
     cartCount += quantity;
     cartCountEl.textContent = cartCount;
@@ -136,7 +132,6 @@
     alert(quantity + " item(s) added to cart!");
   });
 
-  // ---- LIGHTBOX ----
   const lightbox = document.getElementById("lightbox");
   const mainImg = document.querySelector(".main-img");
   const lightboxImg = lightbox.querySelector("img");
@@ -154,6 +149,7 @@
       lightbox.style.display = "none";
     }
   });
+
 </script>
 </body>
 </html>
